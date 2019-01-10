@@ -1088,7 +1088,9 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			{
 				array_push($answers, str_replace(",", "\\,", $item->getAnswerText()));
 			}
-			$output = preg_replace("/\[gap\].*?\[\/gap\]/", "[_gap]" . $this->prepareTextareaOutput(join(",", $answers), true) . "[/_gap]", $output, 1);
+			$output = preg_replace_callback("/\[gap\].*?\[\/gap\]/", function() use ($answers) {
+				return "[_gap]" . $this->prepareTextareaOutput(join(",", $answers), true) . "[/_gap]";
+			}, $output, 1);
 		}
 		$output = str_replace("_gap]", "gap]", $output);
 		$this->cloze_text = $output;
@@ -1147,7 +1149,9 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 				}
 				else
 				{
-					$output = preg_replace("/\[gap\].*?\[\/gap\]/", "[_gap]" . join(",", $answers) . "[/_gap]", $output, 1);
+					$output = preg_replace_callback("/\[gap\].*?\[\/gap\]/", function() use ($answers) {
+						return "[_gap]" . join(",", $answers) . "[/_gap]";
+					}, $output, 1);
 				}
 			}
 			$output = str_replace("_gap]", "gap]", $output);
