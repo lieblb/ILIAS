@@ -23,14 +23,6 @@ il.TestPlayerQuestionEditControl = new function() {
      */
     var BACKGROUND_DETECTOR_PERIOD = 1000;
 
-
-    /**
-     * @const                           delay (ms) for starting the timers (form detection, auto save etc.)
-     *                                  should be long enough for question initialisation
-     *                                  should be shorter than a possible manual interaction
-     */
-    var START_TIMERS_DELAY = 100;
-
     /**
      * @var object config               initial configuration
      */
@@ -153,9 +145,16 @@ il.TestPlayerQuestionEditControl = new function() {
             $('#ilQuestionForceFormDiffInput').hide();
         }
 
-        // Delayed start of timer functions
-        // This gives question scripts some time to initialize
-        setTimeout(startTimers, START_TIMERS_DELAY);
+        // this.init() is called as il.TestPlayerQuestionEditControl.init() before
+        // document ready. so, we wait for document ready first, and then queue as
+        // last document ready, which should place us behind ilMatchingQuestion.js
+        // init() function and the like.
+        $(document).ready(function() {
+            $(document).ready(function() {
+                // at this point, all question initialization code has already run.
+                startTimers();
+            });
+        });
 
     };
 
