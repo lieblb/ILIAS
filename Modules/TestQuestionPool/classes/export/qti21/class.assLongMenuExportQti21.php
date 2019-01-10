@@ -111,7 +111,10 @@ class assLongMenuExportQti21 extends assQuestionExport
 	
 		for($i = 1; $i <= sizeof($answers); $i++ )
 		{
-			$longmenu_text = preg_replace("/\\[".assLongMenu::GAP_PLACEHOLDER." ".$i."]/", $inlineChoice[$i], $longmenu_text);
+			$longmenu_text = preg_replace_callback("/\\[".assLongMenu::GAP_PLACEHOLDER." ".$i."]/",
+				function() use ($inlineChoice, $i) {
+					return $inlineChoice[$i];
+				}, $longmenu_text);
 		}
 		$longmenu_text = $this->object->getQuestion() . $longmenu_text;
 		$xml->xmlStartTag("itemBody", $attrs);
