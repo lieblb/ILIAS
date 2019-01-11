@@ -1947,9 +1947,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 			$points = $combinations[0];
 		}
 		$counter 	  = 0;
-		$solution_values_text = array(); // for identical scoring checks
-		$solution_values_select = array(); // for identical scoring checks
-		$solution_values_numeric = array(); // for identical scoring checks
+		$solution_values = array(); // for identical scoring checks
 		foreach($user_result as $gap_id => $value)
 		{
 			if(is_string($value))
@@ -1972,14 +1970,14 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 						if(!$this->getIdenticalScoring())
 						{
 							// check if the same solution text was already entered
-							if((in_array($value["value"], $solution_values_text)) && ($gappoints > 0))
+							if((in_array($value["value"], $solution_values)) && ($gappoints > 0))
 							{
 								$gappoints = 0;
 							}
 						}
 						$points += $gappoints;
 						$detailed[$gap_id] = array("points" => $gappoints, "best" => ($this->getMaximumGapPoints($gap_id) == $gappoints) ? TRUE : FALSE, "positive" => ($gappoints > 0) ? TRUE : FALSE);
-						array_push($solution_values_text, $value["value"]);
+						array_push($solution_values, $value["value"]);
 						break;
 					case CLOZE_NUMERIC:
 						$gappoints = 0;
@@ -1996,7 +1994,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 							$eval = new EvalMath();
 							$eval->suppress_errors = TRUE;
 							$found_value = FALSE;
-							foreach($solution_values_numeric as $solval)
+							foreach($solution_values as $solval)
 							{
 								if($eval->e($solval) == $eval->e($value["value"]))
 								{
@@ -2010,7 +2008,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 						}
 						$points += $gappoints;
 						$detailed[$gap_id] = array("points" => $gappoints, "best" => ($this->getMaximumGapPoints($gap_id) == $gappoints) ? TRUE : FALSE, "positive" => ($gappoints > 0) ? TRUE : FALSE);
-						array_push($solution_values_numeric, $value["value"]);
+						array_push($solution_values, $value["value"]);
 						break;
 					case CLOZE_SELECT:
 						if($value["value"] >= 0)
@@ -2024,14 +2022,14 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 									if(!$this->getIdenticalScoring())
 									{
 										// check if the same solution value was already entered
-										if((in_array($answer->getAnswertext(), $solution_values_select)) && ($answerpoints > 0))
+										if((in_array($answer->getAnswertext(), $solution_values)) && ($answerpoints > 0))
 										{
 											$answerpoints = 0;
 										}
 									}
 									$points += $answerpoints;
 									$detailed[$gap_id] = array("points" => $answerpoints, "best" => ($this->getMaximumGapPoints($gap_id) == $answerpoints) ? TRUE : FALSE, "positive" => ($answerpoints > 0) ? TRUE : FALSE);
-									array_push($solution_values_select, $answer->getAnswertext());
+									array_push($solution_values, $answer->getAnswertext());
 								}
 							}
 						}
