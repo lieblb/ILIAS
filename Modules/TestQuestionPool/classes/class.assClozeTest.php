@@ -1197,6 +1197,19 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		}
 		return $result;
 	}
+
+	function isTextIdentical($a, $b) {
+		return $this->getTextgapPoints($a, $b, 1) === 1;
+	}
+
+	function isIdenticalTextInArray($a, $array) {
+		foreach ($array as $b) {
+			if ($this->isTextIdentical($a, $b)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	* Returns the points for a text gap and compares the given solution with
@@ -1972,7 +1985,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 						if(!$this->getIdenticalScoring())
 						{
 							// check if the same solution text was already entered
-							if((in_array($value["value"], $solution_values_text)) && ($gappoints > 0))
+							if(($this->isIdenticalTextInArray($value["value"], $solution_values_text)) && ($gappoints > 0))
 							{
 								$gappoints = 0;
 							}
@@ -2024,7 +2037,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 									if(!$this->getIdenticalScoring())
 									{
 										// check if the same solution value was already entered
-										if((in_array($answer->getAnswertext(), $solution_values_select)) && ($answerpoints > 0))
+										if(($this->isIdenticalTextInArray($answer->getAnswertext(), $solution_values_select)) && ($answerpoints > 0))
 										{
 											$answerpoints = 0;
 										}
