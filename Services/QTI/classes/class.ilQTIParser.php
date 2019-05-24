@@ -199,6 +199,7 @@ class ilQTIParser extends ilSaxParser
 		$this->in_assessment = FALSE;
 		$this->characterbuffer = "";
 		$this->metadata = array("label" => "", "entry" => "");
+		$this->questionSetType = ilObjTest::QUESTION_SET_TYPE_FIXED;
 	}
 
 	/**
